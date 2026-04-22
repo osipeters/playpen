@@ -1,0 +1,17 @@
+{
+  "name": "link-bio-redesign-tool",
+  "version": "1.0.0",
+  "description": "AI-powered link in bio redesign tool with live preview",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w backend && npm run build -w frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
