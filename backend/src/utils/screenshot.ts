@@ -5,7 +5,7 @@ let browser: Awaited<ReturnType<typeof puppeteer.launch>> | null = null;
 async function getBrowser() {
   if (!browser) {
     browser = await puppeteer.launch({
-      headless: 'new',
+      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
   }
@@ -24,8 +24,8 @@ export async function takeScreenshot(html: string): Promise<string> {
     await page.setContent(html, { waitUntil: 'networkidle2' });
 
     // Take screenshot and convert to base64
-    const screenshot = await page.screenshot({ type: 'png' });
-    const base64 = screenshot.toString('base64');
+    const screenshot = await page.screenshot();
+    const base64 = (screenshot as Buffer).toString('base64');
 
     await page.close();
 
