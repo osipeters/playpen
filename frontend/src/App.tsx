@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { URLInput } from './components/URLInput';
 import { PreviewPane } from './components/PreviewPane';
 import { DesignControls } from './components/DesignControls';

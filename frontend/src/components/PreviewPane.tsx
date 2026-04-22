@@ -1,4 +1,3 @@
-import React from 'react';
 
 interface PreviewPaneProps {
   originalHtml: string;
@@ -17,7 +16,7 @@ export function PreviewPane({ originalHtml, redesignedHtml, isLoading }: Preview
               title="original"
               srcDoc={originalHtml}
               className="w-full h-full border-none"
-              sandbox={{ allow: ['same-origin', 'scripts', 'popups', 'popups-to-escape-sandbox'] }}
+              sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
             />
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500">
@@ -43,7 +42,7 @@ export function PreviewPane({ originalHtml, redesignedHtml, isLoading }: Preview
               title="redesigned"
               srcDoc={redesignedHtml}
               className="w-full h-full border-none"
-              sandbox={{ allow: ['same-origin', 'scripts', 'popups', 'popups-to-escape-sandbox'] }}
+              sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
             />
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500">

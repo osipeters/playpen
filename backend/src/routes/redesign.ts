@@ -1,13 +1,9 @@
 import { Request, Response } from 'express';
+import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { callClaudeForRedesign, callClaudeForSuggestions } from '../utils/claude.js';
 import { takeScreenshot } from '../utils/screenshot.js';
 
-interface ConversationMessage {
-  role: 'user' | 'assistant';
-  content: string;
-}
-
-const conversationHistory: Map<string, ConversationMessage[]> = new Map();
+const conversationHistory: Map<string, MessageParam[]> = new Map();
 
 export async function redesignRoute(req: Request, res: Response) {
   try {
@@ -29,18 +25,6 @@ export async function redesignRoute(req: Request, res: Response) {
       history,
       session
     );
-
-    history.push({
-      role: 'user',
-      content: userPrompt,
-    });
-
-    history.push({
-      role: 'assistant',
-      content: redesignedHtml,
-    });
-
-    conversationHistory.set(session, history);
 
     const newScreenshot = await takeScreenshot(redesignedHtml);
 

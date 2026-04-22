@@ -1,21 +1,17 @@
 import Anthropic from '@anthropic-ai/sdk';
-
-interface ConversationMessage {
-  role: 'user' | 'assistant';
-  content: string;
-}
+import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-const conversationContexts: Map<string, ConversationMessage[]> = new Map();
+const conversationContexts: Map<string, MessageParam[]> = new Map();
 
 export async function callClaudeForRedesign(
   html: string,
   userPrompt: string,
   screenshot: string,
-  history: ConversationMessage[],
+  history: MessageParam[],
   sessionId: string
 ): Promise<string> {
   const systemPrompt = `You are an expert web designer specializing in modern, visually appealing link-in-bio pages.
@@ -53,14 +49,11 @@ Please redesign the page according to the user's request. Remember to consider a
     },
   ];
 
-  const messages: Anthropic.MessageParam[] = history.map((msg) => ({
-    role: msg.role,
-    content: msg.content,
-  }));
+  const messages: MessageParam[] = [...history];
 
   messages.push({
     role: 'user',
-    content: userContent as Anthropic.MessageParam['content'],
+    content: userContent as MessageParam['content'],
   });
 
   const response = await client.messages.create({
@@ -80,6 +73,11 @@ Please redesign the page according to the user's request. Remember to consider a
     .replace(/\n?```$/, '')
     .trim();
 
+  messages.push({
+    role: 'assistant',
+    content: redesignedHtml,
+  });
+
   conversationContexts.set(sessionId, messages);
 
   return redesignedHtml;
@@ -88,7 +86,7 @@ Please redesign the page according to the user's request. Remember to consider a
 export async function callClaudeForSuggestions(
   html: string,
   screenshot: string,
-  history: ConversationMessage[],
+  history: MessageParam[],
   sessionId: string
 ): Promise<string[]> {
   const systemPrompt = `You are an expert web designer specializing in link-in-bio pages.
@@ -114,14 +112,11 @@ Return only a valid JSON array of strings with your suggestions.`,
     },
   ];
 
-  const messages: Anthropic.MessageParam[] = history.map((msg) => ({
-    role: msg.role,
-    content: msg.content,
-  }));
+  const messages: MessageParam[] = [...history];
 
   messages.push({
     role: 'user',
-    content: userContent as Anthropic.MessageParam['content'],
+    content: userContent as MessageParam['content'],
   });
 
   const response = await client.messages.create({
