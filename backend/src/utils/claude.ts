@@ -1,5 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
